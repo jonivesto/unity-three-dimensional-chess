@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ public class Board : MonoBehaviour
 
     public Piece[,,] positions;
     public Transform[] levels;
-
+    public GameObject selection;
 
     void Start()
     {
@@ -18,6 +19,30 @@ public class Board : MonoBehaviour
 
         transform.position = new Vector3(-boardSize / 2f, -boardSize / 2f, -boardSize / 2f);        
     }
+
+    internal void Expand(int v)
+    {
+        for (int i = 0; i < levels.Length; i++)
+        {
+            float levelY = levels[i].position.y;
+            levelY += (levels[i].position.y / 10) * v;
+            levels[i].position = new Vector3(-boardSize / 2f, levelY, -boardSize / 2f);
+        }
+    }
+
+    internal void Click(Collider collider)
+    {
+        if (collider == null) // Click empty area
+        {
+            selection.SetActive(false);
+        }
+        else // Click piece
+        {
+            selection.SetActive(true);
+            selection.transform.position = collider.transform.position;
+        }
+    }
+
 
     private void DrawLevels()
     {
@@ -36,6 +61,9 @@ public class Board : MonoBehaviour
                 for (int z = 0; z < boardSize; z++)
                 {
                     GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    //Destroy(sphere.GetComponent<MeshFilter>());
+                    //Destroy(sphere.GetComponent<MeshRenderer>());
+
                     sphere.transform.position = new Vector3(x + 0.5f, y + 0.5f, z + 0.5f);
                     sphere.name = "(" + x + ", " + y + ", " + z + ")";
                     sphere.transform.SetParent(level.transform);
@@ -43,4 +71,6 @@ public class Board : MonoBehaviour
             }
         }
     }
+
+    
 }
