@@ -11,6 +11,9 @@ public class Board : MonoBehaviour
     public Transform[] levels;
     public GameObject selection;
 
+    internal bool expanded = false;
+    internal float camDistance;
+
     void Start()
     {
         positions = new Piece[boardSize, boardSize, boardSize];
@@ -20,14 +23,30 @@ public class Board : MonoBehaviour
         transform.position = new Vector3(-boardSize / 2f, -boardSize / 2f, -boardSize / 2f);        
     }
 
-    internal void Expand(int v)
+    internal void Expand(bool expanded)
     {
         for (int i = 0; i < levels.Length; i++)
         {
-            float levelY = levels[i].position.y;
-            levelY += (levels[i].position.y / 10) * v;
-            levels[i].position = new Vector3(-boardSize / 2f, levelY, -boardSize / 2f);
+            float levelY;
+
+            if(expanded)
+            {
+                levelY = i * 4f;
+                camDistance = 13f;
+            }
+            else
+            {
+                levelY = i;
+                camDistance = 16f;
+            }
+
+            levels[i].localPosition = new Vector3(0, Mathf.Lerp(levels[i].localPosition.y, levelY, Time.deltaTime * 10f), 0);
         }
+    }
+
+    void Update()
+    {
+        Expand(expanded);
     }
 
     internal void Click(Collider collider)
