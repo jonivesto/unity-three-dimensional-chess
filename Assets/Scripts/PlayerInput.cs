@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     Board board;
-
+    Collider clickEnter;
 
     void Start()
     {
@@ -14,31 +14,50 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKey("up"))
+        // EXPAND (pinch)
+        if (Input.GetAxis("Mouse ScrollWheel")>0)
         {
             board.expanded = true;
         }
 
-        if (Input.GetKey("down"))
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {
             board.expanded = false;
+            transform.parent.position = new Vector3(0, 0, 0);
         }
 
+        // CLICK (tap)
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 100.0f))
             {
-                board.Click(hit.collider);
+                clickEnter = hit.collider;               
             }
             else
             {
-                board.Click(null);
+                clickEnter = null;               
             }
         }
+        else if(Input.GetMouseButtonUp(0))
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 100.0f))
+            {
+                if (clickEnter == hit.collider) board.Click(clickEnter);
+            }
+            else
+            {
+                if (clickEnter == hit.collider) board.Click(clickEnter);
+            }
 
-        
+            clickEnter = null;
+            
+        }
+
+
 
     }
 

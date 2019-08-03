@@ -10,12 +10,15 @@ public class Board : MonoBehaviour
     public Piece[,,] positions;
     public Transform[] levels;
     public GameObject selection;
+    public int selectedLevel = 0;
 
     internal bool expanded = false;
     internal float camDistance;
+    internal int half;
 
     void Start()
     {
+        half = boardSize / 2;
         positions = new Piece[boardSize, boardSize, boardSize];
 
         DrawLevels();
@@ -27,17 +30,18 @@ public class Board : MonoBehaviour
     {
         for (int i = 0; i < levels.Length; i++)
         {
-            float levelY;
+            float levelY = i;
 
             if(expanded)
-            {
-                levelY = i * 4f;
-                camDistance = 13f;
+            {               
+                if (i < (boardSize / 2)) levelY = -(boardSize - i * 3f); // Down
+                else if (i > (boardSize / 2)) levelY = (i - 1) * 3f; // Up
+
+                camDistance = boardSize * 2.1f;
             }
             else
             {
-                levelY = i;
-                camDistance = 16f;
+                camDistance = boardSize * 2.9f;
             }
 
             levels[i].localPosition = new Vector3(0, Mathf.Lerp(levels[i].localPosition.y, levelY, Time.deltaTime * 10f), 0);
@@ -59,6 +63,7 @@ public class Board : MonoBehaviour
         {
             selection.SetActive(true);
             selection.transform.position = collider.transform.position;
+            selection.transform.parent = collider.transform;
         }
     }
 
