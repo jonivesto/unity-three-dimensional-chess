@@ -10,7 +10,7 @@ public class Board : MonoBehaviour
     public Piece[,,] positions;
     public Transform[] levels;
     public GameObject selection;
-    public int selectedLevel = 0;
+    internal Transform selectedLevel;
 
     internal bool expanded = false;
     internal float camDistance;
@@ -28,14 +28,16 @@ public class Board : MonoBehaviour
 
     internal void Expand(bool expanded)
     {
+        selectedLevel = levels[Mathf.FloorToInt(half)];
+
         for (int i = 0; i < levels.Length; i++)
         {
             float levelY = i;
 
             if(expanded)
             {               
-                if (i < (boardSize / 2)) levelY = -(boardSize - i * 3f); // Down
-                else if (i > (boardSize / 2)) levelY = (i - 1) * 3f; // Up
+                if (i < half) levelY = -(boardSize - i * 3f); // Down
+                else if (i > half) levelY = (i - 1) * 3f; // Up
 
                 camDistance = boardSize * 2.1f;
             }
@@ -84,13 +86,13 @@ public class Board : MonoBehaviour
             {
                 for (int z = 0; z < boardSize; z++)
                 {
-                    GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                    //Destroy(sphere.GetComponent<MeshFilter>());
-                    //Destroy(sphere.GetComponent<MeshRenderer>());
+                    GameObject slot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    //Destroy(slot.GetComponent<MeshFilter>());
+                    //Destroy(slot.GetComponent<MeshRenderer>());
 
-                    sphere.transform.position = new Vector3(x + 0.5f, y + 0.5f, z + 0.5f);
-                    sphere.name = "(" + x + ", " + y + ", " + z + ")";
-                    sphere.transform.SetParent(level.transform);
+                    slot.transform.position = new Vector3(x + 0.5f, y + 0.5f, z + 0.5f);
+                    slot.name = "(" + x + ", " + y + ", " + z + ")";
+                    slot.transform.SetParent(level.transform);
                 }
             }
         }

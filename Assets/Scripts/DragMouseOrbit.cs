@@ -15,6 +15,8 @@ public class DragMouseOrbit : MonoBehaviour
     float rotationXAxis = 0.0f;
     float velocityX = 0.0f;
     float velocityY = 0.0f;
+
+    float scrollY = 0f;
     Board board;
 
     // Use this for initialization
@@ -29,54 +31,62 @@ public class DragMouseOrbit : MonoBehaviour
 
     void LateUpdate()
     {
-        distance = Mathf.Lerp(distance, board.camDistance, Time.deltaTime * (smoothTime/2));
+        distance = Mathf.Lerp(distance, board.camDistance, Time.deltaTime * 10f);
 
-        if (Input.GetMouseButton(0) && !board.expanded) // Orbit
+        if (!board.expanded) // Orbit control
         {
-            velocityX += xSpeed * Input.GetAxis("Mouse X") * distance * 0.02f;
-            velocityY += ySpeed * Input.GetAxis("Mouse Y") * 0.02f;
-        }
-        else if (Input.GetMouseButton(0)) // Levels navigation
-        {
-            float y = target.position.y + -Input.GetAxis("Mouse Y");
-            target.position = new Vector3(0, y, 0);
-        }
-        else // Go to nearest level
-        {
-            Transform nearest = board.levels[0];
-            foreach (Transform t in board.levels)
+            if (Input.GetMouseButton(0)) // Get input
             {
-                if (Vector3.Distance(target.position, t.position) < Vector3.Distance(target.position, nearest.position))
-                    nearest = t;
+                velocityX += xSpeed * Input.GetAxis("Mouse X") * distance * 0.02f;
+                velocityY += ySpeed * Input.GetAxis("Mouse Y") * 0.02f;
             }
-            target.position = new Vector3(0, nearest.position.y, 0);
-        }
 
-        rotationYAxis += velocityX;
-        rotationXAxis -= velocityY;
-        rotationXAxis = ClampAngle(rotationXAxis, yMinLimit, yMaxLimit);
+            rotationYAxis += velocityX;
+            rotationXAxis -= velocityY;
+            rotationXAxis = ClampAngle(rotationXAxis, yMinLimit, yMaxLimit);
+        }
+        else // Expanded control
+        {
+            if (Input.GetMouseButton(0)) // Get input
+            {
+                scrollY = -Input.GetAxis("Mouse Y");
+                target.Translate(Vector3.up * scrollY);
+            }
+
+
+            rotationXAxis = 35f;
+            rotationYAxis = 0f; // TODO: 0 or 180 depends of player turn
+        }
 
         Quaternion fromRotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0);
         Quaternion toRotation = Quaternion.Euler(rotationXAxis, rotationYAxis, 0);
         Quaternion rotation = toRotation;
-
-            
+ 
         Vector3 negDistance = new Vector3(0.0f, 0.0f, -distance);
         Vector3 position = rotation * negDistance + target.position;
 
         transform.rotation = rotation;
         transform.position = position;
+        //transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * 15f);
+        //transform.position = Vector3.Lerp(transform.position, position, Time.deltaTime * 15f);
         velocityX = Mathf.Lerp(velocityX, 0, Time.deltaTime * smoothTime);
         velocityY = Mathf.Lerp(velocityY, 0, Time.deltaTime * smoothTime);
         
     }
 
+    // Limit rotation
     public static float ClampAngle(float angle, float min, float max)
     {
         if (angle < -360F)
+        {
             angle += 360F;
+        }
+
         if (angle > 360F)
+        {
             angle -= 360F;
+        }
+
         return Mathf.Clamp(angle, min, max);
     }
 }
