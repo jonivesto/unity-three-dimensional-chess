@@ -15,7 +15,7 @@ public class PlayerInput : MonoBehaviour
     void Update()
     {
         // EXPAND (pinch)
-        if (Input.GetAxis("Mouse ScrollWheel")>0)
+        if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
             board.expanded = true;
             board.selectedLevel = board.levels[Mathf.FloorToInt(board.half)];

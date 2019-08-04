@@ -1,23 +1,22 @@
 ﻿using UnityEngine;
 
-public class DragMouseOrbit : MonoBehaviour
+public class CameraControls : MonoBehaviour
 {
     Transform target;
+    Board board;
 
-    public float distance = 15.0f;
-    public float xSpeed = 55f;
-    public float ySpeed = 55f;
-    public float yMinLimit = 0f;
-    public float yMaxLimit = 90f;
-
-    public float smoothTime = 20f;
+    float distance = 15.0f;
+    float xSpeed = 19f;
+    float ySpeed = 66f;
+    float yMinLimit = 0f;
+    float yMaxLimit = 90f;
+    float smoothTime = 20f;
     float rotationYAxis = 0.0f;
     float rotationXAxis = 0.0f;
     float velocityX = 0.0f;
     float velocityY = 0.0f;
-
     float scrollY = 0f;
-    Board board;
+    
 
     // Use this for initialization
     void Start()
@@ -32,6 +31,7 @@ public class DragMouseOrbit : MonoBehaviour
     void LateUpdate()
     {
         distance = Mathf.Lerp(distance, board.camDistance, Time.deltaTime * 10f);
+        board.Expand(board.expanded);
 
         if (!board.expanded) // Orbit control
         {
@@ -52,7 +52,6 @@ public class DragMouseOrbit : MonoBehaviour
                 scrollY = -Input.GetAxis("Mouse Y");
                 target.Translate(Vector3.up * scrollY);
             }
-
 
             rotationXAxis = 35f;
             rotationYAxis = 0f; // TODO: 0 or 180 depends of player turn

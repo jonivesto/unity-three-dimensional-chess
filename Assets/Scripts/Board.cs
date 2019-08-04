@@ -7,6 +7,7 @@ public class Board : MonoBehaviour
 {
     int boardSize = 5;
 
+    public Logic logic = new Logic();
     public Piece[,,] positions;
     public Transform[] levels;
     public GameObject selection;
@@ -26,6 +27,17 @@ public class Board : MonoBehaviour
         transform.position = new Vector3(-boardSize / 2f, -boardSize / 2f, -boardSize / 2f);        
     }
 
+    // null if there is no piece
+    public Piece GetPieceAt()
+    {
+        return null;
+    }
+
+    public void SetStartPositions()
+    {
+
+    }
+
     internal void Expand(bool expanded)
     {
         selectedLevel = levels[Mathf.FloorToInt(half)];
@@ -43,16 +55,11 @@ public class Board : MonoBehaviour
             }
             else
             {
-                camDistance = boardSize * 2.9f;
+                camDistance = boardSize * 2.7f;
             }
 
             levels[i].localPosition = new Vector3(0, Mathf.Lerp(levels[i].localPosition.y, levelY, Time.deltaTime * 10f), 0);
         }
-    }
-
-    void Update()
-    {
-        Expand(expanded);
     }
 
     internal void Click(Collider collider)
