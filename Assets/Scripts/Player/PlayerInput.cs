@@ -57,12 +57,7 @@ public class PlayerInput : MonoBehaviour
             clickEnter = null;
             
         }
-
-
-
     }
-
-    
 
 
 }

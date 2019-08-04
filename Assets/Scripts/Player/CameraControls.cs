@@ -50,7 +50,8 @@ public class CameraControls : MonoBehaviour
             if (Input.GetMouseButton(0)) // Get input
             {
                 scrollY = -Input.GetAxis("Mouse Y");
-                target.Translate(Vector3.up * scrollY);
+                //target.Translate(Vector3.up * scrollY);
+                target.position = Vector3.Lerp(target.position, target.position+(Vector3.up * scrollY), Time.deltaTime * smoothTime);
             }
 
             rotationXAxis = 35f;

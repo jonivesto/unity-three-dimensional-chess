@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class King : Piece
+public class CustomBoardLayout : BoardLayout
 {
-    public King(Color color)
+    public CustomBoardLayout()
     {
 
     }

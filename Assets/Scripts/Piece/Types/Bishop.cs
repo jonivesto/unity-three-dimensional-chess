@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Bishop : Piece
 {
-    public Bishop(Color color, Vector3Int position)
+    public Bishop(Color color)
     {
 
     }

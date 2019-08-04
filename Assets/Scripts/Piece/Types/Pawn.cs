@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Pawn : Piece
 {
-    public Pawn(Color color, Vector3Int position)
+    public Pawn(Color color)
     {
 
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Knight : Piece
 {
-    public Knight(Color color, Vector3Int position)
+    public Knight(Color color)
     {
 
     }

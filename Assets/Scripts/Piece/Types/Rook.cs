@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Rook : Piece
 {
-    public Rook(Color color, Vector3Int position)
+    public Rook(Color color)
     {
 
     }

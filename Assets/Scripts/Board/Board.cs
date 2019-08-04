@@ -7,9 +7,8 @@ public class Board : MonoBehaviour
 {
     int boardSize = 5;
 
-    public Logic logic = new Logic();
-    public Piece[,,] positions;
-    public Transform[] levels;
+    internal Piece[,,] positions;
+    internal Transform[] levels;
     public GameObject selection;
     internal Transform selectedLevel;
 
@@ -21,9 +20,7 @@ public class Board : MonoBehaviour
     {
         half = boardSize / 2;
         positions = new Piece[boardSize, boardSize, boardSize];
-
         DrawLevels();
-
         transform.position = new Vector3(-boardSize / 2f, -boardSize / 2f, -boardSize / 2f);        
     }
 
@@ -75,7 +72,6 @@ public class Board : MonoBehaviour
             selection.transform.parent = collider.transform;
         }
     }
-
 
     private void DrawLevels()
     {
