@@ -6,8 +6,7 @@ using UnityEngine.UI;
 
 public class Board : MonoBehaviour
 {
-    int boardSize = 5;
-
+    public Material boardBlack, boardWhite;
     public GameObject coordinateMarkerPrefab;
     public GameObject selection;
 
@@ -15,22 +14,25 @@ public class Board : MonoBehaviour
     internal Piece[,,] positions;
     internal Transform[] levels;   
     internal Transform selectedLevel;
+    internal BoardLayout layout;
 
     internal bool expanded = false;
     internal float camDistance;
-    internal int half;
+    internal int boardSize, halfBoardSize;
 
     void Start()
     {
         cameraControls = Camera.main.gameObject.GetComponent<CameraControls>();
-        half = boardSize / 2;
-        positions = new Piece[boardSize, boardSize, boardSize];
-        DrawLevels();
-        transform.position = new Vector3(-boardSize / 2f, -boardSize / 2f, -boardSize / 2f);        
-    }
 
-    public void SpawnPieceAt()
-    {
+        // Init game 
+        layout = new DefaultBoardLayout();
+        boardSize = layout.boardSize;
+        halfBoardSize = boardSize / 2;
+        positions = new Piece[boardSize, boardSize, boardSize];
+        transform.position = new Vector3(-boardSize / 2f, -boardSize / 2f, -boardSize / 2f);
+        DrawLevels();
+        SetStartPositions();
+        
 
     }
 
@@ -48,11 +50,36 @@ public class Board : MonoBehaviour
     public void SetStartPositions()
     {
 
+        for (int i = 0; i < boardSize; i++)
+        {
+            for (int j = 0; j < boardSize; j++)
+            {
+                for (int k = 0; k < boardSize; k++)
+                {
+                    Piece p = layout.pieces[i, j, k];
+                    if(p != null) SpawnPieceAt(p, i, j, k); 
+                }
+            }
+        }
+    }
+
+    private void SpawnPieceAt(Piece piece, int x, int y, int z)
+    {
+        positions[x, y, z] = piece;
+
+        GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+
+        //obj.GetComponent<MeshRenderer>().material = (piece.color==Color.BLACK) ? boardBlack : boardWhite;
+
+        obj.transform.SetParent(levels[y]);
+        obj.transform.localPosition = new Vector3(x + 0.5f, 0.5f, z + 0.5f);
+        obj.name = piece.GetType().ToString();
+        
     }
 
     internal void Expand(bool expanded)
     {
-        selectedLevel = levels[Mathf.FloorToInt(half)];
+        selectedLevel = levels[Mathf.FloorToInt(halfBoardSize)];
 
         for (int i = 0; i < levels.Length; i++)
         {
@@ -60,8 +87,8 @@ public class Board : MonoBehaviour
 
             if(expanded)
             {               
-                if (i < half) levelY = -(boardSize - i * 3f); // Down
-                else if (i > half) levelY = (i - 1) * 3f; // Up
+                if (i < halfBoardSize) levelY = -(boardSize - i * 3f); // Down
+                else if (i > halfBoardSize) levelY = (i - 1) * 3f; // Up
 
                 camDistance = boardSize * 2.1f;
             }
@@ -92,6 +119,7 @@ public class Board : MonoBehaviour
     {
         levels = new Transform[boardSize];
         GameObject level;
+        int slotCount = 1;
 
         for (int y = 0; y < boardSize; y++)
         {
@@ -105,7 +133,7 @@ public class Board : MonoBehaviour
 
                 for (int z = 0; z < boardSize; z++)
                 {
-
+                    slotCount++;
                     // Z coord markers
                     if (y == 0 && x == 0)
                     {
@@ -124,12 +152,18 @@ public class Board : MonoBehaviour
                         cameraControls.faceToCam.Add(canvas);
                     }
 
-                    GameObject slot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    // Board square object
+                    GameObject slot = GameObject.CreatePrimitive(PrimitiveType.Plane);
                     //Destroy(slot.GetComponent<MeshFilter>());
                     //Destroy(slot.GetComponent<MeshRenderer>());
 
+
+                    slot.GetComponent<MeshRenderer>().material = (slotCount % 2 == 0)?boardBlack:boardWhite; 
+
+
+                    slot.transform.localScale = new Vector3(0.1f,1f,0.1f);
                     slot.transform.position = new Vector3(x + 0.5f, y + 0.5f, z + 0.5f);
-                    slot.name = "(" + x + ", " + y + ", " + z + ")";
+                    slot.name = x + ", " + y + ", " + z;
                     slot.transform.SetParent(level.transform);
                 }
             }

@@ -8,8 +8,8 @@ public enum Color
     BLACK
 }
 
-public class Piece : MonoBehaviour
+public class Piece
 {
-    Color color;
+    public Color color;
 
 }

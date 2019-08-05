@@ -18,7 +18,7 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
             board.expanded = true;
-            board.selectedLevel = board.levels[Mathf.FloorToInt(board.half)];
+            board.selectedLevel = board.levels[Mathf.FloorToInt(board.halfBoardSize)];
         }
 
         else if (Input.GetAxis("Mouse ScrollWheel") < 0)
