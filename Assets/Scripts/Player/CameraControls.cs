@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class CameraControls : MonoBehaviour
 {
     Transform target;
     Board board;
+
+    public List<GameObject> faceToCam = new List<GameObject>();
 
     float distance = 15.0f;
     float xSpeed = 19f;
@@ -30,6 +33,12 @@ public class CameraControls : MonoBehaviour
 
     void LateUpdate()
     {
+        // Always look at camera
+        foreach (GameObject g in faceToCam)
+        {
+            g.transform.LookAt(g.transform.position-transform.position);
+        }
+
         distance = Mathf.Lerp(distance, board.camDistance, Time.deltaTime * 10f);
         board.Expand(board.expanded);
 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311947, g: 0.38074005, b: 0.35872722, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -630,6 +630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0831e633c0c46a94bab54edef14fed8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  faceToCam: []
 --- !u!1 &1426644126
 GameObject:
   m_ObjectHideFlags: 0
@@ -690,6 +691,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05fa7e9bf08c72a4ba9e5164833e0a1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coordinateMarkerPrefab: {fileID: 8320870843324216794, guid: f3bad5b25c1df8749bc06be43c399841,
+    type: 3}
   selection: {fileID: 796757585}
 --- !u!4 &1772774969
 Transform:

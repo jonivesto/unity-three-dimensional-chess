@@ -2,14 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Board : MonoBehaviour
 {
     int boardSize = 5;
 
-    internal Piece[,,] positions;
-    internal Transform[] levels;
+    public GameObject coordinateMarkerPrefab;
     public GameObject selection;
+
+    internal CameraControls cameraControls;
+    internal Piece[,,] positions;
+    internal Transform[] levels;   
     internal Transform selectedLevel;
 
     internal bool expanded = false;
@@ -18,13 +22,24 @@ public class Board : MonoBehaviour
 
     void Start()
     {
+        cameraControls = Camera.main.gameObject.GetComponent<CameraControls>();
         half = boardSize / 2;
         positions = new Piece[boardSize, boardSize, boardSize];
         DrawLevels();
         transform.position = new Vector3(-boardSize / 2f, -boardSize / 2f, -boardSize / 2f);        
     }
 
-    // null if there is no piece
+    public void SpawnPieceAt()
+    {
+
+    }
+
+    public void MovePieceTo(int x, int y, int z)
+    {
+
+    }
+
+    // Value null if there is no piece
     public Piece GetPieceAt()
     {
         return null;
@@ -87,8 +102,28 @@ public class Board : MonoBehaviour
 
             for (int x = 0; x < boardSize; x++)
             {
+
                 for (int z = 0; z < boardSize; z++)
                 {
+
+                    // Z coord markers
+                    if (y == 0 && x == 0)
+                    {
+                        GameObject canvas = Instantiate(coordinateMarkerPrefab, level.transform);
+                        canvas.transform.localPosition = new Vector3(-0.5f, 0.5f, z + 0.5f);
+                        canvas.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + Logic.ZIndexChar(z);
+                        cameraControls.faceToCam.Add(canvas);
+                    }
+
+                    // X coord markers
+                    if (y == 0 && z == 0)
+                    {
+                        GameObject canvas = Instantiate(coordinateMarkerPrefab, level.transform);
+                        canvas.transform.localPosition = new Vector3(x + 0.5f, 0.5f, -0.5f);
+                        canvas.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + Logic.XIndexChar(x);
+                        cameraControls.faceToCam.Add(canvas);
+                    }
+
                     GameObject slot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                     //Destroy(slot.GetComponent<MeshFilter>());
                     //Destroy(slot.GetComponent<MeshRenderer>());
@@ -99,7 +134,16 @@ public class Board : MonoBehaviour
                 }
             }
         }
+
+        // Coord markers for levels
+        for(int i = 0; i < levels.Length; i++)
+        {
+            GameObject canvas = Instantiate(coordinateMarkerPrefab, levels[i]);
+            canvas.transform.localPosition = new Vector3(-0.5f, 0.5f, -0.5f);
+            canvas.transform.GetChild(0).gameObject.GetComponent<Text>().text = ""+Logic.YIndexChar(i);
+            cameraControls.faceToCam.Add(canvas);
+        }
+
     }
 
-    
 }
