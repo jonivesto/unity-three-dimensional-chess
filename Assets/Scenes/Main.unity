@@ -693,6 +693,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boardBlack: {fileID: 2100000, guid: 3988f01a217aea848beda1c87a14cf6e, type: 2}
   boardWhite: {fileID: 2100000, guid: 46abd7b92adb0444496666cbd13cbfe0, type: 2}
+  pieceBlack: {fileID: 2100000, guid: f62cf673b3979a745a7dbc1c924eb437, type: 2}
+  pieceWhite: {fileID: 2100000, guid: 42a689671bec89c4fafe2baa12f4c1de, type: 2}
   coordinateMarkerPrefab: {fileID: 8320870843324216794, guid: f3bad5b25c1df8749bc06be43c399841,
     type: 3}
   selection: {fileID: 796757585}

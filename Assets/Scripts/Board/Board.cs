@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Board : MonoBehaviour
 {
-    public Material boardBlack, boardWhite;
+    public Material boardBlack, boardWhite, pieceBlack, pieceWhite;
     public GameObject coordinateMarkerPrefab;
     public GameObject selection;
 
@@ -14,7 +14,7 @@ public class Board : MonoBehaviour
     internal Piece[,,] positions;
     internal Transform[] levels;   
     internal Transform selectedLevel;
-    internal BoardLayout layout;
+    internal ChessVariant layout;
 
     internal bool expanded = false;
     internal float camDistance;
@@ -25,7 +25,7 @@ public class Board : MonoBehaviour
         cameraControls = Camera.main.gameObject.GetComponent<CameraControls>();
 
         // Init game 
-        layout = new DefaultBoardLayout();
+        layout = new Raumschach();
         boardSize = layout.boardSize;
         halfBoardSize = boardSize / 2;
         positions = new Piece[boardSize, boardSize, boardSize];
@@ -69,11 +69,12 @@ public class Board : MonoBehaviour
 
         GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Capsule);
 
-        //obj.GetComponent<MeshRenderer>().material = (piece.color==Color.BLACK) ? boardBlack : boardWhite;
+        obj.GetComponent<MeshRenderer>().material = (piece.color==Color.Black) ? pieceBlack : pieceWhite;
 
         obj.transform.SetParent(levels[y]);
-        obj.transform.localPosition = new Vector3(x + 0.5f, 0.5f, z + 0.5f);
-        obj.name = piece.GetType().ToString();
+        obj.transform.localPosition = new Vector3(x + 0.5f, 1f, z + 0.5f);
+        obj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        obj.name = piece.color.ToString() + " " + piece.GetType().ToString();
         
     }
 

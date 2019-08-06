@@ -6,6 +6,6 @@ public class Queen : Piece
 {
     public Queen(Color color)
     {
-
+        this.color = color;
     }
 }

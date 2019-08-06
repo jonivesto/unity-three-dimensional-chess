@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CustomBoardLayout : BoardLayout
+public class Unicorn : Piece
 {
-    public CustomBoardLayout()
+    public Unicorn(Color color)
     {
-
+        this.color = color;
     }
 }

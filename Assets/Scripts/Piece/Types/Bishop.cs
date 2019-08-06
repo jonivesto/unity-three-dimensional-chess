@@ -6,6 +6,6 @@ public class Bishop : Piece
 {
     public Bishop(Color color)
     {
-
+        this.color = color;
     }
 }

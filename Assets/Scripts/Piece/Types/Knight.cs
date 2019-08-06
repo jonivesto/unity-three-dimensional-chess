@@ -6,6 +6,6 @@ public class Knight : Piece
 {
     public Knight(Color color)
     {
-
+        this.color = color;
     }
 }

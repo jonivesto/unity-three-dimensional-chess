@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardLayout
+public class ChessVariant
 {
     public string layoutName;
 

@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Color
+public class Custom : ChessVariant
 {
-    White,
-    Black
-}
+    public Custom()
+    {
 
-public class Piece
-{
-    public Color color;
-
+    }
 }

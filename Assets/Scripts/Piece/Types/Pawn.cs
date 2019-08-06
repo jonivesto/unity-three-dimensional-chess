@@ -6,6 +6,6 @@ public class Pawn : Piece
 {
     public Pawn(Color color)
     {
-
+        this.color = color;
     }
 }

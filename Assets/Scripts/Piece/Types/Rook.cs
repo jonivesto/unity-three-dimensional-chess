@@ -6,6 +6,6 @@ public class Rook : Piece
 {
     public Rook(Color color)
     {
-
+        this.color = color;
     }
 }
