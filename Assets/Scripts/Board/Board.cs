@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,10 +31,9 @@ public class Board : MonoBehaviour
         halfBoardSize = boardSize / 2;
         positions = new Piece[boardSize, boardSize, boardSize];
         transform.position = new Vector3(-boardSize / 2f, -boardSize / 2f, -boardSize / 2f);
+
         DrawLevels();
         SetStartPositions();
-        
-
     }
 
     public void MovePieceTo(int x, int y, int z)
@@ -42,14 +42,13 @@ public class Board : MonoBehaviour
     }
 
     // Value null if there is no piece
-    public Piece GetPieceAt()
+    public Piece GetPieceAt(int x, int y, int z)
     {
-        return null;
+        return positions[x, y, z];
     }
 
     public void SetStartPositions()
     {
-
         for (int i = 0; i < boardSize; i++)
         {
             for (int j = 0; j < boardSize; j++)
@@ -68,9 +67,9 @@ public class Board : MonoBehaviour
         positions[x, y, z] = piece;
 
         GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-
+        piece.instance = obj;
         obj.GetComponent<MeshRenderer>().material = (piece.color==Color.Black) ? pieceBlack : pieceWhite;
-
+        obj.tag = "Piece";
         obj.transform.SetParent(levels[y]);
         obj.transform.localPosition = new Vector3(x + 0.5f, 1f, z + 0.5f);
         obj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
@@ -91,11 +90,11 @@ public class Board : MonoBehaviour
                 if (i < halfBoardSize) levelY = -(boardSize - i * 3f); // Down
                 else if (i > halfBoardSize) levelY = (i - 1) * 3f; // Up
 
-                camDistance = boardSize * 2.1f;
+                camDistance = boardSize * 2.4f;
             }
             else
             {
-                camDistance = boardSize * 2.7f;
+                camDistance = boardSize * 3.1f;
             }
 
             levels[i].localPosition = new Vector3(0, Mathf.Lerp(levels[i].localPosition.y, levelY, Time.deltaTime * 10f), 0);
@@ -106,13 +105,47 @@ public class Board : MonoBehaviour
     {
         if (collider == null) // Click empty area
         {
+            // Clear all selections
             selection.SetActive(false);
         }
-        else // Click piece
+        else
         {
-            selection.SetActive(true);
-            selection.transform.position = collider.transform.position;
-            selection.transform.parent = collider.transform;
+            // Click Piece
+            if (collider.tag == "Piece")
+            {
+                
+                // Piece clicked
+                selection.SetActive(true);
+                selection.transform.position = collider.transform.position;
+                selection.transform.parent = collider.transform;
+            }
+
+            // Click Board
+            else if(collider.tag == "Board"){
+
+                string[] pos = collider.name.Split(',');
+
+                int x = Convert.ToInt32(pos[0]);
+                int y = Convert.ToInt32(pos[1]);
+                int z = Convert.ToInt32(pos[2]);
+
+                if (GetPieceAt(x, y, z) != null)
+                {
+                    // Slot with piece clicked
+                    Piece clickedPiece = GetPieceAt(x, y, z);
+                    print(Logic.Markup(x, y, z) + " " + clickedPiece.instance.name);
+                    selection.SetActive(true);
+                    selection.transform.position = clickedPiece.instance.transform.position;
+                    selection.transform.parent = clickedPiece.instance.transform;
+                }
+                else
+                {
+                    // Empty slot clicked
+                    print(Logic.Markup(x,y,z) + " No piece");
+                }
+            }
+
+           
         }
     }
 
@@ -139,6 +172,7 @@ public class Board : MonoBehaviour
                     if (y == 0 && x == 0)
                     {
                         GameObject canvas = Instantiate(coordinateMarkerPrefab, level.transform);
+                        canvas.tag = "Marker Z";
                         canvas.transform.localPosition = new Vector3(-0.5f, 0.5f, z + 0.5f);
                         canvas.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + Logic.ZIndexChar(z);
                         cameraControls.faceToCam.Add(canvas);
@@ -148,6 +182,7 @@ public class Board : MonoBehaviour
                     if (y == 0 && z == 0)
                     {
                         GameObject canvas = Instantiate(coordinateMarkerPrefab, level.transform);
+                        canvas.tag = "Marker X";
                         canvas.transform.localPosition = new Vector3(x + 0.5f, 0.5f, -0.5f);
                         canvas.transform.GetChild(0).gameObject.GetComponent<Text>().text = "" + Logic.XIndexChar(x);
                         cameraControls.faceToCam.Add(canvas);
@@ -155,12 +190,9 @@ public class Board : MonoBehaviour
 
                     // Board square object
                     GameObject slot = GameObject.CreatePrimitive(PrimitiveType.Plane);
-                    //Destroy(slot.GetComponent<MeshFilter>());
-                    //Destroy(slot.GetComponent<MeshRenderer>());
-
+                    slot.tag = "Board";
 
                     slot.GetComponent<MeshRenderer>().material = (slotCount % 2 == 0)?boardBlack:boardWhite; 
-
 
                     slot.transform.localScale = new Vector3(0.1f,1f,0.1f);
                     slot.transform.position = new Vector3(x + 0.5f, y + 0.5f, z + 0.5f);
@@ -174,6 +206,7 @@ public class Board : MonoBehaviour
         for(int i = 0; i < levels.Length; i++)
         {
             GameObject canvas = Instantiate(coordinateMarkerPrefab, levels[i]);
+            canvas.tag = "Marker Y";
             canvas.transform.localPosition = new Vector3(-0.5f, 0.5f, -0.5f);
             canvas.transform.GetChild(0).gameObject.GetComponent<Text>().text = ""+Logic.YIndexChar(i);
             cameraControls.faceToCam.Add(canvas);

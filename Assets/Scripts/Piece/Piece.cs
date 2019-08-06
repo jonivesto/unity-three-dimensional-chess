@@ -11,5 +11,5 @@ public enum Color
 public class Piece
 {
     public Color color;
-
+    public GameObject instance;
 }

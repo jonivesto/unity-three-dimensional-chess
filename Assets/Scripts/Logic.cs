@@ -18,4 +18,9 @@ public static class Logic
     {
         return (i + 1).ToString();
     }
+
+    public static string Markup(int x, int y, int z)
+    {
+        return XIndexChar(x) + "" + YIndexChar(y) + "" + ZIndexChar(z);
+    }
 }
