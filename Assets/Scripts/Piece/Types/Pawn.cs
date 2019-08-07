@@ -31,7 +31,33 @@ public class Pawn : Piece
             moves.Add(new int[] { x, y + dir, z + dir });
         }
 
-        // TODO: Capturing moves
+        // Forward Left
+        target = board.GetPieceAt(x-1, y, z + dir);
+        if (target != null && target.color != Color.Gray && target.color != color)
+        {
+            moves.Add(new int[] { x-1, y, z + dir });
+        }
+
+        // Forward Up Left
+        target = board.GetPieceAt(x-1, y + dir, z + dir);
+        if (target != null && target.color != Color.Gray && target.color != color)
+        {
+            moves.Add(new int[] { x-1, y + dir, z + dir });
+        }
+
+        // Forward Right
+        target = board.GetPieceAt(x + 1, y, z + dir);
+        if (target != null && target.color != Color.Gray && target.color != color)
+        {
+            moves.Add(new int[] { x + 1, y, z + dir });
+        }
+
+        // Forward Up Right
+        target = board.GetPieceAt(x + 1, y + dir, z + dir);
+        if (target != null && target.color != Color.Gray && target.color != color)
+        {
+            moves.Add(new int[] { x + 1, y + dir, z + dir });
+        }
 
         return moves;
     }

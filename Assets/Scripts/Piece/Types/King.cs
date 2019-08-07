@@ -15,50 +15,34 @@ public class King : Piece
         Piece current = board.GetPieceAt(x, y, z);
         Piece target;
 
-        // Left
-        target = board.GetPieceAt(x - 1, y, z);
-        if (target != null && target.color != current.color)
+        // Cube around the piece
+        for (int i = 0; i < 3; i++)
         {
-            moves.Add(new int[] { x - 1, y, z });
+            for (int j = 0; j < 3; j++)
+            {
+                for (int k = 0; k < 3; k++)
+                {
+                    int xi = x - 1 + i;
+                    int yj = y - 1 + j;
+                    int zk = z - 1 + k;
+
+                    target = board.GetPieceAt(xi, yj, zk);
+
+                    // Ignore self, out of bounds, and pieces of same color
+                    if (target != null && target.color != current.color) 
+                    {
+                        moves.Add(new int[] { xi, yj, zk });
+                    }
+                }
+            }
         }
 
-        // Right
-        target = board.GetPieceAt(x + 1, y, z);
-        if (target != null && target.color != current.color)
-        {
-            moves.Add(new int[] { x + 1, y, z });
-        }
+        
 
-        // Down
-        target = board.GetPieceAt(x, y - 1, z);
-        if (target != null && target.color != current.color)
-        {
-            moves.Add(new int[] { x, y - 1, z });
-        }
+        
 
-        // Up
-        target = board.GetPieceAt(x, y + 1, z);
-        if (target != null && target.color != current.color)
-        {
-            moves.Add(new int[] { x, y + 1, z });
-        }
-
-        // Back
-        target = board.GetPieceAt(x, y, z - 1);
-        if (target != null && target.color != current.color)
-        {
-            moves.Add(new int[] { x, y, z - 1 });
-        }
-
-        // Forward
-        target = board.GetPieceAt(x, y, z + 1);
-        if (target != null && target.color != current.color)
-        {
-            moves.Add(new int[] { x, y, z + 1 });
-        }
-
-        // TODO: Rest of the moves
-
+        
+        
         return moves;
     }
 

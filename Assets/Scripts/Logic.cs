@@ -26,7 +26,7 @@ public static class Logic
 
     public static string Markup(int x, int y, int z)
     {
-        return XIndexChar(x) + "" + YIndexChar(y) + "" + ZIndexChar(z);
+        return YIndexChar(x) + "" + XIndexChar(y) + "" + ZIndexChar(z);
     }
 
     public static void FindCheck()

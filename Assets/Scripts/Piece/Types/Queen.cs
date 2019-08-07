@@ -13,6 +13,9 @@ public class Queen : Piece
     {
         List<int[]> moves = new List<int[]>();
 
+        moves.AddRange(new Bishop(color).GetMoves(x, y, z, board));
+        moves.AddRange(new Rook(color).GetMoves(x, y, z, board));
+        moves.AddRange(new Unicorn(color).GetMoves(x, y, z, board));
 
         return moves;
     }
