@@ -43,5 +43,6 @@ public class Raumschach : ChessVariant
             pieces[i, 3, 3] = new Pawn(Color.Black);
 
         }
+
     }
 }

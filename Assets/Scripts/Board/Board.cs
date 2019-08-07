@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,12 +34,7 @@ public class Board : MonoBehaviour
         SetStartPositions();
     }
 
-    public void MovePieceTo(int x, int y, int z)
-    {
-
-    }
-
-    // Value null if out of bounds
+    // Return null if out of bounds
     // Return FreeToCapture (Piece) if there is no piece
     public Piece GetPieceAt(int x, int y, int z)
     {
@@ -53,10 +49,9 @@ public class Board : MonoBehaviour
                 piece = new FreeToCapture();
             }
         }
-        catch (IndexOutOfRangeException outOfBounds)
+        catch (IndexOutOfRangeException)
         {
-            piece = null;
-            throw outOfBounds;
+            piece = null;    
         }
 
         return piece;
@@ -88,8 +83,7 @@ public class Board : MonoBehaviour
         obj.transform.SetParent(levels[y]);
         obj.transform.localPosition = new Vector3(x + 0.5f, 1f, z + 0.5f);
         obj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-        obj.name = piece.color.ToString() + " " + piece.GetType().ToString();
-        
+        obj.name = piece.color.ToString() + " " + piece.GetType().ToString();      
     }
 
     internal void Expand(bool expanded)
@@ -121,7 +115,7 @@ public class Board : MonoBehaviour
         if (collider == null) // Click empty area
         {
             // Clear all selections
-            selection.SetActive(false);
+            EndSelection();
         }
         else
         {
@@ -129,9 +123,6 @@ public class Board : MonoBehaviour
             if (collider.tag == "Piece")
             {               
                 // Piece clicked
-                selection.SetActive(true);
-                selection.transform.position = collider.transform.position;
-                selection.transform.parent = collider.transform;
 
                 int x = Mathf.FloorToInt(collider.transform.localPosition.x);
                 int y = Convert.ToInt32(collider.transform.parent.name.Substring(5));
@@ -140,11 +131,8 @@ public class Board : MonoBehaviour
                 Piece clickedPiece = GetPieceAt(x, y, z);
 
                 if (clickedPiece != null && clickedPiece.color != Color.Gray)
-                {                 
-                    print(Logic.Markup(x, y, z) + " " + clickedPiece.instance.name);
-                    selection.SetActive(true);
-                    selection.transform.position = clickedPiece.instance.transform.position;
-                    selection.transform.parent = clickedPiece.instance.transform;
+                {
+                    SelectPieceAt(x, y, z, clickedPiece);
                 }
             }
 
@@ -162,19 +150,73 @@ public class Board : MonoBehaviour
                 if (clickedPiece != null && clickedPiece.color != Color.Gray)
                 {
                     // Slot with piece clicked                  
-                    print(Logic.Markup(x, y, z) + " " + clickedPiece.instance.name);
-                    selection.SetActive(true);
-                    selection.transform.position = clickedPiece.instance.transform.position;
-                    selection.transform.parent = clickedPiece.instance.transform;
+                    SelectPieceAt(x, y, z, clickedPiece);
                 }
                 else
                 {
                     // Empty slot clicked
-                    print(Logic.Markup(x,y,z) + " Free To Capture");
+                    EndSelection();
                 }
             }
 
+            else if (collider.tag == "Move")
+            {
+                // Click move
+
+                // TODO: Moves
+            }
+
            
+        }
+    }
+
+    private void SelectPieceAt(int x, int y, int z, Piece clickedPiece)
+    {       
+        if (clickedPiece.Select())
+        {
+            print("Selected: " + Logic.Markup(x, y, z) + " - " + clickedPiece.instance.name);
+
+            selection.SetActive(true);
+            selection.transform.position = clickedPiece.instance.transform.position;
+            selection.transform.parent = clickedPiece.instance.transform;
+
+            DrawMoves(clickedPiece.GetMoves(x, y, z, this));
+        }
+    }
+
+    private void EndSelection()
+    {
+        Logic.SelectedPiece = null;
+        selection.SetActive(false);
+        EraseMoves();      
+    }
+
+    private void DrawMoves(List<int[]> moves)
+    {
+        EraseMoves();
+
+        foreach (int[] move in moves)
+        {
+            GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            obj.GetComponent<MeshRenderer>().material = null;
+            obj.tag = "Move";
+
+            obj.transform.parent=levels[move[1]];
+            obj.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
+            obj.transform.localPosition = new Vector3(move[0] + 0.5f, 0.5f, move[2] + 0.5f);
+        }
+    }
+
+    private void EraseMoves()
+    {
+        GameObject[] moves;
+        moves = GameObject.FindGameObjectsWithTag("Move");
+
+        if (moves == null) return;
+
+        foreach (GameObject move in moves)
+        {
+            Destroy(move);
         }
     }
 
@@ -195,10 +237,10 @@ public class Board : MonoBehaviour
 
             for (int x = 0; x < boardSize; x++)
             {
-
                 for (int z = 0; z < boardSize; z++)
                 {
                     slotCount++;
+
                     // Z coord markers
                     if (y == 0 && x == 0)
                     {
@@ -264,10 +306,4 @@ public class Board : MonoBehaviour
         //line.numCornerVertices = 5;
     }
 
-    public bool InBounds(int x)
-    {
-        if (x >= boardSize || x < 0) return false;
-
-        return true;
-    }
 }

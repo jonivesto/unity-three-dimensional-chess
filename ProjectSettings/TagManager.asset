@@ -9,6 +9,7 @@ TagManager:
   - Marker X
   - Marker Y
   - Marker Z
+  - Move
   layers:
   - Default
   - TransparentFX

@@ -12,7 +12,26 @@ public class Pawn : Piece
     public override List<int[]> GetMoves(int x, int y, int z, Board board)
     {
         List<int[]> moves = new List<int[]>();
+        Piece current = board.GetPieceAt(x, y, z);
+        Piece target;
 
+        int dir = (current.color == Color.White) ? 1 : -1;
+
+        // Forward
+        target = board.GetPieceAt(x, y, z + dir);
+        if (target != null && target.color == Color.Gray)
+        {
+            moves.Add(new int[] { x, y, z + dir });
+        }
+
+        // Forward Up
+        target = board.GetPieceAt(x, y + dir, z + dir);
+        if (target != null && target.color == Color.Gray)
+        {
+            moves.Add(new int[] { x, y + dir, z + dir });
+        }
+
+        // TODO: Capturing moves
 
         return moves;
     }

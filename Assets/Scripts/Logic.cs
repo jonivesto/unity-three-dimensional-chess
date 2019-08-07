@@ -1,10 +1,13 @@
 ﻿
+using UnityEngine;
+
 public static class Logic
 {
     private static char[] Alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
 
     public static Color PlayerTurn = Color.White;
-    
+
+    public static Piece SelectedPiece = null;
 
     public static char XIndexChar(int i)
     {
@@ -33,6 +36,21 @@ public static class Logic
 
     public static void FindCheckMate()
     {
+
+    }
+
+    public static void EndTurn()
+    {
+        if (PlayerTurn == Color.Black)
+        {
+            PlayerTurn = Color.White;
+        }
+        else
+        {
+            PlayerTurn = Color.Black;
+        }
+
+        Debug.Log(PlayerTurn.ToString() + "'s turn.");
 
     }
 }

@@ -12,6 +12,8 @@ public class Bishop : Piece
     public override List<int[]> GetMoves(int x, int y, int z, Board board)
     {
         List<int[]> moves = new List<int[]>();
+        Piece current = board.GetPieceAt(x, y, z);
+        Piece target;
 
 
         return moves;
