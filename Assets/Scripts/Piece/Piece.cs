@@ -5,7 +5,8 @@ using UnityEngine;
 public enum Color
 {
     White,
-    Black
+    Black,
+    Gray // Neutral, used by free to captures
 }
 
 public class Piece

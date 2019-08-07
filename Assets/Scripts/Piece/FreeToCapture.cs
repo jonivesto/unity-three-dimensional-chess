@@ -6,6 +6,6 @@ public class FreeToCapture : Piece
 {
     public FreeToCapture()
     {
-
+        this.color = Color.Gray;
     }
 }

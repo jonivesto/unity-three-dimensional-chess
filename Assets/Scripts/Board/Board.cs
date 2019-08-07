@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -130,12 +127,25 @@ public class Board : MonoBehaviour
         {
             // Click Piece
             if (collider.tag == "Piece")
-            {
-                
+            {               
                 // Piece clicked
                 selection.SetActive(true);
                 selection.transform.position = collider.transform.position;
                 selection.transform.parent = collider.transform;
+
+                int x = Mathf.FloorToInt(collider.transform.localPosition.x);
+                int y = Convert.ToInt32(collider.transform.parent.name.Substring(5));
+                int z = Mathf.FloorToInt(collider.transform.localPosition.z);
+
+                Piece clickedPiece = GetPieceAt(x, y, z);
+
+                if (clickedPiece != null && clickedPiece.color != Color.Gray)
+                {                 
+                    print(Logic.Markup(x, y, z) + " " + clickedPiece.instance.name);
+                    selection.SetActive(true);
+                    selection.transform.position = clickedPiece.instance.transform.position;
+                    selection.transform.parent = clickedPiece.instance.transform;
+                }
             }
 
             // Click Board
@@ -147,10 +157,11 @@ public class Board : MonoBehaviour
                 int y = Convert.ToInt32(pos[1]);
                 int z = Convert.ToInt32(pos[2]);
 
-                if (GetPieceAt(x, y, z) != null)
+                Piece clickedPiece = GetPieceAt(x, y, z);
+
+                if (clickedPiece != null && clickedPiece.color != Color.Gray)
                 {
-                    // Slot with piece clicked
-                    Piece clickedPiece = GetPieceAt(x, y, z);
+                    // Slot with piece clicked                  
                     print(Logic.Markup(x, y, z) + " " + clickedPiece.instance.name);
                     selection.SetActive(true);
                     selection.transform.position = clickedPiece.instance.transform.position;
@@ -159,7 +170,7 @@ public class Board : MonoBehaviour
                 else
                 {
                     // Empty slot clicked
-                    print(Logic.Markup(x,y,z) + " No piece");
+                    print(Logic.Markup(x,y,z) + " Free To Capture");
                 }
             }
 
