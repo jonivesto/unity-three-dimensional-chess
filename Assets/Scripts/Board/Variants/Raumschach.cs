@@ -3,7 +3,7 @@ public class Raumschach : ChessVariant
 {
     public Raumschach()
     {
-        layoutName = "5x5 Raumschach";
+        layoutName = "5x5x5 Raumschach";
 
         boardSize = 5;
 

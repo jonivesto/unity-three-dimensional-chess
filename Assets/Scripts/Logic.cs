@@ -1,17 +1,19 @@
-﻿using System;
-
+﻿
 public static class Logic
 {
-    static char[] ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+    private static char[] Alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+
+    public static Color PlayerTurn = Color.White;
+    
 
     public static char XIndexChar(int i)
     {
-        return char.ToLower(ALPHA[i]);
+        return char.ToLower(Alpha[i]);
     }
 
     public static char YIndexChar(int i)
     {
-        return ALPHA[i];
+        return Alpha[i];
     }
 
     public static string ZIndexChar(int i)
@@ -22,5 +24,15 @@ public static class Logic
     public static string Markup(int x, int y, int z)
     {
         return XIndexChar(x) + "" + YIndexChar(y) + "" + ZIndexChar(z);
+    }
+
+    public static void FindCheck()
+    {
+
+    }
+
+    public static void FindCheckMate()
+    {
+
     }
 }

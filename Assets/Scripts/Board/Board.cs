@@ -41,10 +41,28 @@ public class Board : MonoBehaviour
 
     }
 
-    // Value null if there is no piece
+    // Value null if out of bounds
+    // Return FreeToCapture (Piece) if there is no piece
     public Piece GetPieceAt(int x, int y, int z)
     {
-        return positions[x, y, z];
+        Piece piece;
+
+        try
+        {           
+            piece = positions[x, y, z];
+
+            if (piece == null)
+            {
+                piece = new FreeToCapture();
+            }
+        }
+        catch (IndexOutOfRangeException outOfBounds)
+        {
+            piece = null;
+            throw outOfBounds;
+        }
+
+        return piece;
     }
 
     public void SetStartPositions()
@@ -158,9 +176,11 @@ public class Board : MonoBehaviour
         for (int y = 0; y < boardSize; y++)
         {
             level = new GameObject("Level " + y);
+            
             levels[y] = level.transform;
             level.transform.position = new Vector3(0, y, 0);
             level.transform.SetParent(transform);
+            DrawLevelOutline(level);
 
             for (int x = 0; x < boardSize; x++)
             {
@@ -214,4 +234,29 @@ public class Board : MonoBehaviour
 
     }
 
+    private void DrawLevelOutline(GameObject level)
+    {
+        LineRenderer line = level.AddComponent<LineRenderer>();
+        //line.sortingLayerName = "OnTop";
+        //line.sortingOrder = 5;
+        line.positionCount = 4;
+        Vector3 linePos =  new Vector3(0, 0.5f, 0);
+        line.SetPosition(0, linePos);
+        line.SetPosition(1, linePos + (Vector3.forward * boardSize));
+        line.SetPosition(2, linePos + (Vector3.forward * boardSize) + (Vector3.right * boardSize));
+        line.SetPosition(3, linePos + (Vector3.forward * boardSize) + (Vector3.right * boardSize) + (Vector3.back * boardSize));
+        line.startWidth = 0.06f;
+        line.endWidth = 0.06f;
+        line.loop = true;
+        line.useWorldSpace = false;
+        line.material = pieceBlack;
+        //line.numCornerVertices = 5;
+    }
+
+    public bool InBounds(int x)
+    {
+        if (x >= boardSize || x < 0) return false;
+
+        return true;
+    }
 }
