@@ -21,10 +21,26 @@ public class Knight : Piece
             {
                 for (int k = 0; k < 5; k++)
                 {
-                    // Ignore self, out of bounds, and pieces of same color
-                    if (target != null && target.color != color)
+                    if ((i > 0 && i < 4) && (j > 0 && j < 4) && (k > 0 && k < 4)) continue;
+
+                    if ((k == 2 && Pattern(i + 1))
+                       || (k == 2 && Pattern(j + 1))
+                       || (j == 2 && Pattern(k + 1))
+                       || (j == 2 && Pattern(i + 1))
+                       || (i == 2 && Pattern(j + 1))
+                       || (i == 2 && Pattern(k + 1)))
                     {
-                        moves.Add(new int[] { x, y, z });
+                        int xx = x - 2 + i;
+                        int yy = y - 2 + j;
+                        int zz = z - 2 + k;
+
+                        target = board.GetPieceAt(xx, yy, zz);
+
+                        // Ignore self, out of bounds, and pieces of same color
+                        if (target != null && target.color != color)
+                        {
+                            moves.Add(new int[] { xx, yy, zz });
+                        }
                     }
                 }
             }
@@ -33,5 +49,16 @@ public class Knight : Piece
         return moves;
     }
 
+    private bool Pattern(int i)
+    {
+        int[] pattern = { 2, 4, 6, 10, 16, 10, 22, 24 };
+
+        foreach (var p in pattern)
+        {
+            if (i == p) return true;
+        }
+
+        return false;
+    }
 
 }

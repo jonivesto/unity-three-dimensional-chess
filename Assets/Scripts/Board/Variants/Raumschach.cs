@@ -42,7 +42,5 @@ public class Raumschach : ChessVariant
             pieces[i, 4, 3] = new Pawn(Color.Black);
             pieces[i, 3, 3] = new Pawn(Color.Black);
         }
-
-        pieces[2, 2, 2] = new Knight(Color.White);////
     }
 }
