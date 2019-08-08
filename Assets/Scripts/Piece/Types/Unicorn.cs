@@ -15,6 +15,7 @@ public class Unicorn : Piece
         Piece current = board.GetPieceAt(x, y, z);
         Piece target;
 
+
         // Forward Up Right
         for (int i = 1; i < board.boardSize; i++)
         {

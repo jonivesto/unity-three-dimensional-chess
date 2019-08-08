@@ -9,9 +9,13 @@ public class Raumschach : ChessVariant
 
         pieces = new Piece[boardSize, boardSize, boardSize];
 
-        pieces[2, 0, 0] = new King(Color.White);
+        
+        Logic.WhiteKing = new King(Color.White);
+        pieces[2, 0, 0] = Logic.WhiteKing;
         pieces[2, 1, 0] = new Queen(Color.White);
-        pieces[2, 4, 4] = new King(Color.Black);
+
+        Logic.BlackKing = new King(Color.Black);
+        pieces[2, 4, 4] = Logic.BlackKing;
         pieces[2, 3, 4] = new Queen(Color.Black);
 
         pieces[3, 1, 0] = new Bishop(Color.White);

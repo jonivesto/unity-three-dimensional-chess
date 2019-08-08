@@ -1,4 +1,6 @@
 ﻿
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class Logic
@@ -7,7 +9,11 @@ public static class Logic
 
     public static Color PlayerTurn = Color.White;
 
+    public static Piece WhiteKing, BlackKing;
+
     public static Piece SelectedPiece = null;
+
+    public static int[] SelectedPiecePosition = null;
 
     public static char XIndexChar(int i)
     {
@@ -29,14 +35,10 @@ public static class Logic
         return YIndexChar(x) + "" + XIndexChar(y) + "" + ZIndexChar(z);
     }
 
-    public static void FindCheck()
+    public static Piece GetKing(Color kingColor)
     {
-
-    }
-
-    public static void FindCheckMate()
-    {
-
+        if (kingColor == Color.Black) return BlackKing;
+        else return WhiteKing;
     }
 
     public static void EndTurn()
@@ -53,4 +55,5 @@ public static class Logic
         Debug.Log(PlayerTurn.ToString() + "'s turn.");
 
     }
+
 }

@@ -34,6 +34,11 @@ public class Board : MonoBehaviour
         SetStartPositions();
     }
 
+    internal Piece GetKing(Color playerTurn)
+    {
+        throw new NotImplementedException();
+    }
+
     // Return null if out of bounds
     // Return FreeToCapture (Piece) if there is no piece
     public Piece GetPieceAt(int x, int y, int z)
@@ -106,7 +111,7 @@ public class Board : MonoBehaviour
                 camDistance = boardSize * 3.1f;
             }
 
-            levels[i].localPosition = new Vector3(0, Mathf.Lerp(levels[i].localPosition.y, levelY, Time.deltaTime * 10f), 0);
+            levels[i].localPosition = new Vector3(0, Mathf.Lerp(levels[i].localPosition.y, levelY*1.3f, Time.deltaTime * 10f), 0);
         }
     }
 
@@ -123,7 +128,6 @@ public class Board : MonoBehaviour
             if (collider.tag == "Piece")
             {               
                 // Piece clicked
-
                 int x = Mathf.FloorToInt(collider.transform.localPosition.x);
                 int y = Convert.ToInt32(collider.transform.parent.name.Substring(5));
                 int z = Mathf.FloorToInt(collider.transform.localPosition.z);
@@ -187,7 +191,10 @@ public class Board : MonoBehaviour
     private void EndSelection()
     {
         Logic.SelectedPiece = null;
+        Logic.SelectedPiecePosition = null;
+
         selection.SetActive(false);
+
         EraseMoves();      
     }
 
