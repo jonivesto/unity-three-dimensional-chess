@@ -78,7 +78,7 @@ public static class Logic
         }
 
         Debug.Log(PlayerTurn.ToString() + "'s turn.");
-
     }
+
 
 }

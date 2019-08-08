@@ -4,11 +4,8 @@ public class Raumschach : ChessVariant
     public Raumschach()
     {
         layoutName = "5x5x5 Raumschach";
-
         boardSize = 5;
-
         pieces = new Piece[boardSize, boardSize, boardSize];
-
         
         Logic.WhiteKing = new King(Color.White);
         pieces[2, 0, 0] = Logic.WhiteKing;

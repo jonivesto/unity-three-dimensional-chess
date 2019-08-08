@@ -194,7 +194,7 @@ public class Board : MonoBehaviour
                     
                 }
             }
-
+            /*
             else if (collider.tag == "Move")
             {
                 // Click move
@@ -208,18 +208,39 @@ public class Board : MonoBehaviour
                 // Deselect
                 EndSelection();
             }
-
+            */
            
         }
     }
 
     private void MovePieceTo(int x, int y, int z, Piece selectedPiece)
     {
+        // Debug message
         print("Move " + selectedPiece.instance.name 
             + " at " + Logic.Markup(selectedPiece.position[0], selectedPiece.position[1], selectedPiece.position[2]) 
             + " to " + Logic.Markup(x,y,z));
 
         //if (Logic.Check(Color.Black, this)) print("!!");
+
+
+        // Destroy if there is an enemy to capture
+        Piece target = GetPieceAt(x, y, z);
+        if (target != null && target.instance != null)
+        {
+            Destroy(target.instance);
+        }
+
+        // Move in array
+        int[] s = selectedPiece.GetPosition();       
+        positions[s[0], s[1], s[2]] = new FreeToCapture();
+        positions[x, y, z] = selectedPiece;
+
+        // Move instance
+        selectedPiece.instance.transform.SetParent(levels[y]);
+        selectedPiece.instance.transform.localPosition = new Vector3(x + 0.5f, 1f, z + 0.5f);
+
+        // Finish
+        Logic.EndTurn();
     }
 
     private bool SelectPieceAt(int x, int y, int z, Piece clickedPiece)
@@ -256,13 +277,13 @@ public class Board : MonoBehaviour
 
         foreach (int[] move in moves)
         {
-            GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Plane);
             obj.GetComponent<MeshRenderer>().material = null;
             obj.tag = "Move";
-
+            Destroy(obj.GetComponent<Collider>());
             obj.transform.parent=levels[move[1]];
-            obj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-            obj.transform.localPosition = new Vector3(move[0] + 0.5f, 0.9f, move[2] + 0.5f);
+            obj.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            obj.transform.localPosition = new Vector3(move[0] + 0.5f, 0.55f, move[2] + 0.5f);
         }
     }
 
@@ -346,7 +367,7 @@ public class Board : MonoBehaviour
 
     }
 
-    private void DrawLevelOutline(GameObject level)
+    /*private void DrawLevelOutline(GameObject level)
     {
         LineRenderer line = level.AddComponent<LineRenderer>();
         //line.sortingLayerName = "OnTop";
@@ -363,6 +384,6 @@ public class Board : MonoBehaviour
         line.useWorldSpace = false;
         line.material = pieceBlack;
         //line.numCornerVertices = 5;
-    }
+    }*/
 
 }
