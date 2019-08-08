@@ -24,6 +24,12 @@ public class Piece
         return null;
     }
 
+    // Position when this piece was last selected
+    public int[] position;
+
+    // Available moves when this piece was last selected
+    public List<int[]> moves;
+
     // Select piece if its player's turn
     // Returns bool value of success state
     public bool Select()
@@ -38,6 +44,18 @@ public class Piece
         return false;
     }
 
+    public bool ContainsMove(int x, int y, int z)
+    {
+        if (moves == null) return false;
+
+        foreach (int[] move in moves)
+        {
+            if (x == move[0] && y == move[1] && z == move[2]) return true;
+        }
+
+        return false;
+    }
+
     // Piece's coordinates on the board
     public int[] GetPosition()
     {
@@ -47,7 +65,8 @@ public class Piece
         int y = Convert.ToInt32(instance.transform.parent.name.Substring(5));
         int z = Mathf.FloorToInt(instance.transform.localPosition.z);
 
-        return new int[] { x, y, z };
+        position = new int[] { x, y, z };
+        return position;
     }
 
 }

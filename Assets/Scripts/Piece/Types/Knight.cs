@@ -46,6 +46,7 @@ public class Knight : Piece
             }
         }
 
+        this.moves = moves;
         return moves;
     }
 

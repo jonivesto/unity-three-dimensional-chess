@@ -37,6 +37,7 @@ public class King : Piece
             }
         }
 
+        this.moves = moves;
         return moves;
     }
 

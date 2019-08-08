@@ -64,8 +64,8 @@ public class CameraControls : MonoBehaviour
 
             }
 
-            rotationXAxis = 35f;
-            rotationYAxis = 0f; // TODO: 0 or 180 depends of player turn
+            rotationXAxis = 23f;
+            rotationYAxis = 45f; // TODO: 0 or 180 depends of player turn
         }
 
         Quaternion fromRotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0);

@@ -136,6 +136,7 @@ public class Rook : Piece
 
         }
 
+        this.moves = moves;
         return moves;
     }
 }

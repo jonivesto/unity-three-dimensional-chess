@@ -175,6 +175,7 @@ public class Bishop : Piece
             }
         }
 
+        this.moves = moves;
         return moves;
     }
 }

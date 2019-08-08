@@ -111,7 +111,7 @@ public class Board : MonoBehaviour
                 camDistance = boardSize * 3.1f;
             }
 
-            levels[i].localPosition = new Vector3(0, Mathf.Lerp(levels[i].localPosition.y, levelY*1.3f, Time.deltaTime * 10f), 0);
+            levels[i].localPosition = new Vector3(0, Mathf.Lerp(levels[i].localPosition.y, levelY*1.25f, Time.deltaTime * 10f), 0);
         }
     }
 
@@ -135,8 +135,19 @@ public class Board : MonoBehaviour
                 Piece clickedPiece = GetPieceAt(x, y, z);
 
                 if (clickedPiece != null && clickedPiece.color != Color.Gray)
-                {
-                    SelectPieceAt(x, y, z, clickedPiece);
+                {                
+                    if (!SelectPieceAt(x, y, z, clickedPiece))
+                    {
+                        Piece selected = Logic.SelectedPiece;
+                        if (selected != null && selected.ContainsMove(x, y, z))
+                        {
+                            // Do the move
+                            MovePieceTo(x, y, z, selected);
+
+                            // Deselect
+                            EndSelection();
+                        }
+                    }
                 }
             }
 
@@ -154,11 +165,30 @@ public class Board : MonoBehaviour
                 if (clickedPiece != null && clickedPiece.color != Color.Gray)
                 {
                     // Slot with piece clicked                  
-                    SelectPieceAt(x, y, z, clickedPiece);
+                    if(!SelectPieceAt(x, y, z, clickedPiece))
+                    {
+                        Piece selected = Logic.SelectedPiece;
+                        if (selected != null && selected.ContainsMove(x, y, z))
+                        {
+                            // Do the move
+                            MovePieceTo(x, y, z, selected);
+
+                            // Deselect
+                            EndSelection();
+                        }
+                    }
                 }
                 else
                 {
                     // Empty slot clicked
+                    Piece selected = Logic.SelectedPiece;
+                    if (selected != null && selected.ContainsMove(x, y, z))
+                    {
+                        // Do the move
+                        MovePieceTo(x, y, z, selected);
+                    }
+
+                    // Deselect
                     EndSelection();
                 }
             }
@@ -166,15 +196,31 @@ public class Board : MonoBehaviour
             else if (collider.tag == "Move")
             {
                 // Click move
+                int x = Mathf.FloorToInt(collider.transform.localPosition.x);
+                int y = Convert.ToInt32(collider.transform.parent.name.Substring(5));
+                int z = Mathf.FloorToInt(collider.transform.localPosition.z);
 
-                // TODO: Moves
+                // Do the move
+                MovePieceTo(x, y, z, Logic.SelectedPiece);
+
+                // Deselect
+                EndSelection();
             }
 
            
         }
     }
 
-    private void SelectPieceAt(int x, int y, int z, Piece clickedPiece)
+    private void MovePieceTo(int x, int y, int z, Piece selectedPiece)
+    {
+        print("Move " + selectedPiece.instance.name 
+            + " at " + Logic.Markup(selectedPiece.position[0], selectedPiece.position[1], selectedPiece.position[2]) 
+            + " to " + Logic.Markup(x,y,z));
+
+
+    }
+
+    private bool SelectPieceAt(int x, int y, int z, Piece clickedPiece)
     {       
         if (clickedPiece.Select())
         {
@@ -185,7 +231,11 @@ public class Board : MonoBehaviour
             selection.transform.parent = clickedPiece.instance.transform;
 
             DrawMoves(clickedPiece.GetMoves(x, y, z, this));
+
+            return true;
         }
+
+        return false;
     }
 
     private void EndSelection()
@@ -240,7 +290,7 @@ public class Board : MonoBehaviour
             levels[y] = level.transform;
             level.transform.position = new Vector3(0, y, 0);
             level.transform.SetParent(transform);
-            DrawLevelOutline(level);
+            //DrawLevelOutline(level);
 
             for (int x = 0; x < boardSize; x++)
             {

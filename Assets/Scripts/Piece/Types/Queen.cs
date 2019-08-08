@@ -17,6 +17,7 @@ public class Queen : Piece
         moves.AddRange(new Rook(color).GetMoves(x, y, z, board));
         moves.AddRange(new Unicorn(color).GetMoves(x, y, z, board));
 
+        this.moves = moves;
         return moves;
     }
 }

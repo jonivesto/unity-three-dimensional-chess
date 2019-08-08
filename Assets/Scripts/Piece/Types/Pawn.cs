@@ -59,6 +59,7 @@ public class Pawn : Piece
             moves.Add(new int[] { x + 1, y + dir, z + dir });
         }
 
+        this.moves = moves;
         return moves;
     }
 }

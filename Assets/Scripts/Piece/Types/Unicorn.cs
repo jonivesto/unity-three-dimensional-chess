@@ -176,6 +176,7 @@ public class Unicorn : Piece
             }
         }
 
+        this.moves = moves;
         return moves;
     }
 }
