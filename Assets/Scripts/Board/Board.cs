@@ -186,10 +186,12 @@ public class Board : MonoBehaviour
                     {
                         // Do the move
                         MovePieceTo(x, y, z, selected);
+
+                        // Deselect
+                        EndSelection();
                     }
 
-                    // Deselect
-                    EndSelection();
+                    
                 }
             }
 
@@ -217,7 +219,7 @@ public class Board : MonoBehaviour
             + " at " + Logic.Markup(selectedPiece.position[0], selectedPiece.position[1], selectedPiece.position[2]) 
             + " to " + Logic.Markup(x,y,z));
 
-
+        //if (Logic.Check(Color.Black, this)) print("!!");
     }
 
     private bool SelectPieceAt(int x, int y, int z, Piece clickedPiece)
@@ -259,8 +261,8 @@ public class Board : MonoBehaviour
             obj.tag = "Move";
 
             obj.transform.parent=levels[move[1]];
-            obj.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
-            obj.transform.localPosition = new Vector3(move[0] + 0.5f, 0.5f, move[2] + 0.5f);
+            obj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            obj.transform.localPosition = new Vector3(move[0] + 0.5f, 0.9f, move[2] + 0.5f);
         }
     }
 

@@ -35,11 +35,36 @@ public static class Logic
         return YIndexChar(x) + "" + XIndexChar(y) + "" + ZIndexChar(z);
     }
 
-    public static Piece GetKing(Color kingColor)
+    public static bool Check(Color player, Board board)
     {
-        if (kingColor == Color.Black) return BlackKing;
-        else return WhiteKing;
+        Piece king = BlackKing;
+        Color enemies = Color.White;
+
+        if (player == Color.White)
+        {
+            king = WhiteKing;
+            enemies = Color.Black;
+        }
+
+        foreach (Piece piece in board.positions)
+        {
+            if (piece!=null&&piece.color == enemies)
+            {
+                int[] enemyPos = piece.GetPosition();
+                int[] kingPos = king.GetPosition();
+
+                piece.GetMoves(enemyPos[0], enemyPos[1], enemyPos[2], board);
+                if (piece.ContainsMove(kingPos[0], kingPos[1], kingPos[2]))
+                {
+                    Debug.Log("Check! " + king.instance.name + " - " + piece.instance.name);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
+
 
     public static void EndTurn()
     {
