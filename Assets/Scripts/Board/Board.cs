@@ -253,7 +253,8 @@ public class Board : MonoBehaviour
             selectedPiece.instance.transform.localPosition = new Vector3(x + 0.5f, 1f, z + 0.5f);
 
             // Finish
-            Logic.EndTurn();
+            Logic.EndTurn(this);
+
         }
     }
 

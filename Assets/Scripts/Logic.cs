@@ -56,7 +56,6 @@ public static class Logic
                 piece.GetMoves(enemyPos[0], enemyPos[1], enemyPos[2], board);
                 if (piece.ContainsMove(kingPos[0], kingPos[1], kingPos[2]))
                 {
-                    Debug.Log("Check! " + king.instance.name + " - " + piece.instance.name);
                     return true;
                 }
             }
@@ -66,8 +65,9 @@ public static class Logic
     }
 
 
-    public static void EndTurn()
-    {
+    public static void EndTurn(Board board)
+    {       
+        // Change turn
         if (PlayerTurn == Color.Black)
         {
             PlayerTurn = Color.White;
@@ -75,6 +75,12 @@ public static class Logic
         else
         {
             PlayerTurn = Color.Black;
+        }
+
+        // Notify if check
+        if (Check(PlayerTurn, board))
+        {
+            Debug.Log("Check!");
         }
 
         Debug.Log(PlayerTurn.ToString() + "'s turn.");
