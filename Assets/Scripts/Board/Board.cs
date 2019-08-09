@@ -215,32 +215,46 @@ public class Board : MonoBehaviour
 
     private void MovePieceTo(int x, int y, int z, Piece selectedPiece)
     {
-        // Debug message
-        print("Move " + selectedPiece.instance.name 
-            + " at " + Logic.Markup(selectedPiece.position[0], selectedPiece.position[1], selectedPiece.position[2]) 
-            + " to " + Logic.Markup(x,y,z));
+        
 
         //if (Logic.Check(Color.Black, this)) print("!!");
+        bool canExecute = true;
 
 
-        // Destroy if there is an enemy to capture
-        Piece target = GetPieceAt(x, y, z);
-        if (target != null && target.instance != null)
+        if (canExecute)
         {
-            Destroy(target.instance);
+            // Capture
+            Piece target = GetPieceAt(x, y, z);
+            if (target != null && target.instance != null)
+            {
+                // Debug message
+                print("Move " + selectedPiece.instance.name
+                    + " at " + Logic.Markup(selectedPiece.position[0], selectedPiece.position[1], selectedPiece.position[2])
+                    + " to capture " + target.instance.name + " at " + Logic.Markup(x,y,z));
+
+                // Kill captured Piece's GameObject
+                Destroy(target.instance);
+            }
+            else
+            {
+                // Debug message
+                print("Move " + selectedPiece.instance.name
+                    + " at " + Logic.Markup(selectedPiece.position[0], selectedPiece.position[1], selectedPiece.position[2])
+                    + " to " + Logic.Markup(x, y, z));
+            }
+
+            // Move in array
+            int[] s = selectedPiece.GetPosition();
+            positions[s[0], s[1], s[2]] = new FreeToCapture();
+            positions[x, y, z] = selectedPiece;
+
+            // Move instance
+            selectedPiece.instance.transform.SetParent(levels[y]);
+            selectedPiece.instance.transform.localPosition = new Vector3(x + 0.5f, 1f, z + 0.5f);
+
+            // Finish
+            Logic.EndTurn();
         }
-
-        // Move in array
-        int[] s = selectedPiece.GetPosition();       
-        positions[s[0], s[1], s[2]] = new FreeToCapture();
-        positions[x, y, z] = selectedPiece;
-
-        // Move instance
-        selectedPiece.instance.transform.SetParent(levels[y]);
-        selectedPiece.instance.transform.localPosition = new Vector3(x + 0.5f, 1f, z + 0.5f);
-
-        // Finish
-        Logic.EndTurn();
     }
 
     private bool SelectPieceAt(int x, int y, int z, Piece clickedPiece)
