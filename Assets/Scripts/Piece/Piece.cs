@@ -59,14 +59,26 @@ public class Piece
     // Piece's coordinates on the board
     public int[] GetPosition()
     {
-        if (instance == null) return null;
+        Board board = Logic.board;
+        int x = 0, y = 0, z = 0;
 
-        int x = Mathf.FloorToInt(instance.transform.localPosition.x);
-        int y = Convert.ToInt32(instance.transform.parent.name.Substring(5));
-        int z = Mathf.FloorToInt(instance.transform.localPosition.z);
+        for (x = 0; x < board.boardSize; x++)
+        {
+            for (y = 0; y < board.boardSize; y++)
+            {
+                for (z = 0; z < board.boardSize; z++)
+                {
+                    if(board.GetPieceAt(x, y, z) == this)
+                    {
+                        position = new int[] { x, y, z };
+                        return position;
+                    }
+                }
+            }
+        }
 
-        position = new int[] { x, y, z };
-        return position;
+        Debug.LogError("Piece not found!");
+        return null;
     }
 
 }

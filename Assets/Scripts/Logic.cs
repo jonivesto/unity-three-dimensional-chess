@@ -11,9 +11,12 @@ public static class Logic
 
     public static Piece WhiteKing, BlackKing;
 
+    public static Board board = null;
+
     public static Piece SelectedPiece = null;
 
     public static int[] SelectedPiecePosition = null;
+
 
     public static char XIndexChar(int i)
     {
@@ -48,7 +51,7 @@ public static class Logic
 
         foreach (Piece piece in board.positions)
         {
-            if (piece!=null&&piece.color == enemies)
+            if (piece != null && piece.color == enemies)
             {
                 int[] enemyPos = piece.GetPosition();
                 int[] kingPos = king.GetPosition();

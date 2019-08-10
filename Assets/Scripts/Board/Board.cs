@@ -10,7 +10,7 @@ public class Board : MonoBehaviour
     public GameObject selection;
 
     internal CameraControls cameraControls;
-    internal Piece[,,] positions;
+    internal Piece[,,] positions, allowedMoves;
     internal Transform[] levels;   
     internal Transform selectedLevel;
     internal ChessVariant layout;
@@ -21,6 +21,7 @@ public class Board : MonoBehaviour
 
     void Start()
     {
+        Logic.board = this;
         cameraControls = Camera.main.gameObject.GetComponent<CameraControls>();
 
         // Init game 
@@ -28,15 +29,11 @@ public class Board : MonoBehaviour
         boardSize = layout.boardSize;
         halfBoardSize = boardSize / 2;
         positions = new Piece[boardSize, boardSize, boardSize];
+        allowedMoves = new Piece[boardSize, boardSize, boardSize];
         transform.position = new Vector3(-boardSize / 2f, -boardSize / 2f, -boardSize / 2f);
 
         DrawLevels();
         SetStartPositions();
-    }
-
-    internal Piece GetKing(Color playerTurn)
-    {
-        throw new NotImplementedException();
     }
 
     // Return null if out of bounds
@@ -139,7 +136,7 @@ public class Board : MonoBehaviour
                     if (!SelectPieceAt(x, y, z, clickedPiece))
                     {
                         Piece selected = Logic.SelectedPiece;
-                        if (selected != null && selected.ContainsMove(x, y, z))
+                        if (selected != null && selected.ContainsMove(x, y, z) && allowedMoves[x, y, z] != null)
                         {
                             // Do the move
                             MovePieceTo(x, y, z, selected);
@@ -168,7 +165,7 @@ public class Board : MonoBehaviour
                     if(!SelectPieceAt(x, y, z, clickedPiece))
                     {
                         Piece selected = Logic.SelectedPiece;
-                        if (selected != null && selected.ContainsMove(x, y, z))
+                        if (selected != null && selected.ContainsMove(x, y, z) && allowedMoves[x, y, z] != null)
                         {
                             // Do the move
                             MovePieceTo(x, y, z, selected);
@@ -182,7 +179,7 @@ public class Board : MonoBehaviour
                 {
                     // Empty slot clicked
                     Piece selected = Logic.SelectedPiece;
-                    if (selected != null && selected.ContainsMove(x, y, z))
+                    if (selected != null && selected.ContainsMove(x, y, z) && allowedMoves[x, y, z] != null)
                     {
                         // Do the move
                         MovePieceTo(x, y, z, selected);
@@ -215,47 +212,37 @@ public class Board : MonoBehaviour
 
     private void MovePieceTo(int x, int y, int z, Piece selectedPiece)
     {
-        
-
-        //if (Logic.Check(Color.Black, this)) print("!!");
-        bool canExecute = true;
-
-
-        if (canExecute)
+        // Capture
+        Piece target = GetPieceAt(x, y, z);
+        if (target != null && target.instance != null)
         {
-            // Capture
-            Piece target = GetPieceAt(x, y, z);
-            if (target != null && target.instance != null)
-            {
-                // Debug message
-                print("Move " + selectedPiece.instance.name
-                    + " at " + Logic.Markup(selectedPiece.position[0], selectedPiece.position[1], selectedPiece.position[2])
-                    + " to capture " + target.instance.name + " at " + Logic.Markup(x,y,z));
+            // Debug message
+            print("Move " + selectedPiece.instance.name
+                + " at " + Logic.Markup(selectedPiece.position[0], selectedPiece.position[1], selectedPiece.position[2])
+                + " to capture " + target.instance.name + " at " + Logic.Markup(x,y,z));
 
-                // Kill captured Piece's GameObject
-                Destroy(target.instance);
-            }
-            else
-            {
-                // Debug message
-                print("Move " + selectedPiece.instance.name
-                    + " at " + Logic.Markup(selectedPiece.position[0], selectedPiece.position[1], selectedPiece.position[2])
-                    + " to " + Logic.Markup(x, y, z));
-            }
-
-            // Move in array
-            int[] s = selectedPiece.GetPosition();
-            positions[s[0], s[1], s[2]] = new FreeToCapture();
-            positions[x, y, z] = selectedPiece;
-
-            // Move instance
-            selectedPiece.instance.transform.SetParent(levels[y]);
-            selectedPiece.instance.transform.localPosition = new Vector3(x + 0.5f, 1f, z + 0.5f);
-
-            // Finish
-            Logic.EndTurn(this);
-
+            // Kill captured Piece's GameObject
+            Destroy(target.instance);
         }
+        else
+        {
+            // Debug message
+            print("Move " + selectedPiece.instance.name
+                + " at " + Logic.Markup(selectedPiece.position[0], selectedPiece.position[1], selectedPiece.position[2])
+                + " to " + Logic.Markup(x, y, z));
+        }
+
+        // Move in array
+        int[] s = selectedPiece.GetPosition();
+        positions[s[0], s[1], s[2]] = new FreeToCapture();
+        positions[x, y, z] = selectedPiece;
+
+        // Move instance
+        selectedPiece.instance.transform.SetParent(levels[y]);
+        selectedPiece.instance.transform.localPosition = new Vector3(x + 0.5f, 1f, z + 0.5f);
+
+        // Finish
+        Logic.EndTurn(this);  
     }
 
     private bool SelectPieceAt(int x, int y, int z, Piece clickedPiece)
@@ -292,6 +279,24 @@ public class Board : MonoBehaviour
 
         foreach (int[] move in moves)
         {
+            // If legal
+            Piece[,,] hold = (Piece[,,])positions.Clone();
+
+            int[] s = Logic.SelectedPiecePosition;
+            positions[s[0], s[1], s[2]] = new FreeToCapture();
+            positions[move[0], move[1], move[2]] = Logic.SelectedPiece;
+
+            if (Logic.Check(Logic.PlayerTurn, this))
+            {
+                // Dont draw illegal move
+                positions = hold;
+                continue;
+            }
+            positions = hold;
+
+
+            allowedMoves[move[0], move[1], move[2]] = new FreeToCapture();
+            // Draw
             GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Plane);
             obj.GetComponent<MeshRenderer>().material = null;
             obj.tag = "Move";
@@ -304,6 +309,8 @@ public class Board : MonoBehaviour
 
     private void EraseMoves()
     {
+        allowedMoves = new Piece[boardSize, boardSize, boardSize];
+
         GameObject[] moves;
         moves = GameObject.FindGameObjectsWithTag("Move");
 
