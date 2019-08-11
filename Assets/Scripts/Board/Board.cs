@@ -279,9 +279,8 @@ public class Board : MonoBehaviour
 
         foreach (int[] move in moves)
         {
-            // If legal
+            // Save position in cloned board
             Piece[,,] hold = (Piece[,,])positions.Clone();
-
             int[] s = Logic.SelectedPiecePosition;
             positions[s[0], s[1], s[2]] = new FreeToCapture();
             positions[move[0], move[1], move[2]] = Logic.SelectedPiece;
@@ -292,10 +291,10 @@ public class Board : MonoBehaviour
                 positions = hold;
                 continue;
             }
+
             positions = hold;
-
-
             allowedMoves[move[0], move[1], move[2]] = new FreeToCapture();
+
             // Draw
             GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Plane);
             obj.GetComponent<MeshRenderer>().material = null;

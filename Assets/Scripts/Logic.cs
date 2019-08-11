@@ -67,7 +67,6 @@ public static class Logic
         return false;
     }
 
-
     public static void EndTurn(Board board)
     {       
         // Change turn
@@ -80,14 +79,56 @@ public static class Logic
             PlayerTurn = Color.Black;
         }
 
+        bool check = Check(PlayerTurn, board);
         // Notify if check
-        if (Check(PlayerTurn, board))
+        if (check)
         {
             Debug.Log("Check!");
+
+            // Checkmate
+            if (CheckMate(board))
+            {
+                Debug.Log("Checkmate! " + PlayerTurn.ToString() + " lost.");
+            }
+        }
+        // Draw
+        else if (CheckMate(board))
+        {
+            Debug.Log("Draw!");
         }
 
         Debug.Log(PlayerTurn.ToString() + "'s turn.");
     }
 
+    // If player has nothing left to move
+    private static bool CheckMate(Board board)
+    {
+        foreach (Piece piece in board.positions)
+        {
+            if (piece != null && piece.color == PlayerTurn)
+            {
+                int[] pos = piece.GetPosition();
+                List<int[]> moves = piece.GetMoves(pos[0], pos[1], pos[2], board);
 
+                foreach (int[] move in moves)
+                {
+                    // Save position in cloned board
+                    Piece[,,] hold = (Piece[,,])board.positions.Clone();
+                    board.positions[pos[0], pos[1], pos[2]] = new FreeToCapture();
+                    board.positions[move[0], move[1], move[2]] = piece;
+
+                    if (!Check(PlayerTurn, board))
+                    {
+                        board.positions = hold;
+                        return false;
+                    }
+
+                    board.positions = hold;
+                }
+
+            }
+        }
+
+        return true;
+    }
 }
