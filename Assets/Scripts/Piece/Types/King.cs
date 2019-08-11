@@ -22,6 +22,8 @@ public class King : Piece
             {
                 for (int k = 0; k < 3; k++)
                 {
+                    if (j == 1) continue;
+
                     int xi = x - 1 + i;
                     int yj = y - 1 + j;
                     int zk = z - 1 + k;
@@ -35,6 +37,30 @@ public class King : Piece
                     }
                 }
             }
+        }
+
+        target = board.GetPieceAt(x + 1, y, z);
+        if (target != null && target.color != current.color)
+        {
+            moves.Add(new int[] { x + 1, y, z });
+        }
+
+        target = board.GetPieceAt(x - 1, y, z);
+        if (target != null && target.color != current.color)
+        {
+            moves.Add(new int[] { x - 1, y, z });
+        }
+
+        target = board.GetPieceAt(x, y, z - 1);
+        if (target != null && target.color != current.color)
+        {
+            moves.Add(new int[] { x, y, z - 1});
+        }
+
+        target = board.GetPieceAt(x, y, z + 1);
+        if (target != null && target.color != current.color)
+        {
+            moves.Add(new int[] { x, y, z + 1 });
         }
 
         this.moves = moves;
