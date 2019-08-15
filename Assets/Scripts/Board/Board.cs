@@ -118,6 +118,8 @@ public class Board : MonoBehaviour
                 if (i < halfBoardSize) levelY = -(boardSize - i * 3f); // Down
                 else if (i > halfBoardSize) levelY = (i - 1) * 3f; // Up
 
+                levelY = levelY * 0.7f;
+
                 camDistance = boardSize * 2.4f;
             }
             else

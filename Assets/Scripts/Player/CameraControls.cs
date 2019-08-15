@@ -9,8 +9,8 @@ public class CameraControls : MonoBehaviour
     public List<GameObject> faceToCam = new List<GameObject>();
 
     float distance = 15.0f;
-    float xSpeed = 19f;
-    float ySpeed = 66f;
+    //float xSpeed = 19f;
+    //float ySpeed = 66f;
     float yMinLimit = 0f;
     float yMaxLimit = 90f;
     float smoothTime = 20f;
@@ -44,11 +44,19 @@ public class CameraControls : MonoBehaviour
 
         if (!board.expanded) // Orbit control
         {
-            if (Input.GetMouseButton(0)) // Get input
+            /*if (Input.GetMouseButton(0)) // Get input
             {
                 velocityX += xSpeed * Input.GetAxis("Mouse X") * distance * 0.02f;
                 velocityY += ySpeed * Input.GetAxis("Mouse Y") * 0.02f;
+            }*/
+
+            Touch touch = Input.GetTouch(0);
+            if (Input.touchCount==1&&touch.phase == TouchPhase.Moved)
+            {
+                velocityX += touch.deltaPosition.x * 0.45f;
+                velocityY += touch.deltaPosition.y  * 0.45f;
             }
+            
 
             rotationYAxis += velocityX;
             rotationXAxis -= velocityY;
@@ -56,13 +64,21 @@ public class CameraControls : MonoBehaviour
         }
         else // Expanded control
         {
-            if (Input.GetMouseButton(0)) // Get input
+            /*if (Input.GetMouseButton(0)) // Get input
             {
                 scrollY = -Input.GetAxis("Mouse Y");
                 //target.Translate(Vector3.up * scrollY);
                 target.position = Vector3.Lerp(target.position, target.position+(Vector3.up * scrollY), Time.deltaTime * smoothTime);
+            }*/
 
+            Touch touch = Input.GetTouch(0);
+            if (Input.touchCount == 1 && touch.phase == TouchPhase.Moved)
+            {
+                scrollY = -touch.deltaPosition.y * 0.05f;
+                //target.Translate(Vector3.up * scrollY);
+                target.position = Vector3.Lerp(target.position, target.position + (Vector3.up * scrollY), Time.deltaTime * smoothTime);
             }
+
 
             rotationXAxis = 23f;
             rotationYAxis = 45f; // TODO: 0 or 180 depends of player turn
