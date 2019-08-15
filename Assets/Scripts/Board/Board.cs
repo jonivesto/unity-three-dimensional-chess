@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Board : MonoBehaviour
 {
-    public Material boardBlack, boardWhite, pieceBlack, pieceWhite;
+    public Material boardBlack, boardWhite, pieceBlack, pieceWhite, boardWire;
     public GameObject coordinateMarkerPrefab;
     public GameObject selection;
 
@@ -18,6 +18,8 @@ public class Board : MonoBehaviour
     internal bool expanded = false;
     internal float camDistance;
     internal int boardSize, halfBoardSize;
+
+    public Mesh pawnMesh, rookMesh, knightMesh, bishopMesh, unicornMesh, kingMesh, queenMesh;
 
     void Start()
     {
@@ -83,9 +85,24 @@ public class Board : MonoBehaviour
         obj.GetComponent<MeshRenderer>().material = (piece.color==Color.Black) ? pieceBlack : pieceWhite;
         obj.tag = "Piece";
         obj.transform.SetParent(levels[y]);
-        obj.transform.localPosition = new Vector3(x + 0.5f, 1f, z + 0.5f);
-        obj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-        obj.name = piece.color.ToString() + " " + piece.GetType().ToString();      
+        obj.transform.localPosition = new Vector3(x + 0.5f, 0.5f, z + 0.5f);
+        obj.transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
+        obj.name = piece.color.ToString() + " " + piece.GetType().ToString();
+
+        switch (piece.GetType().ToString())
+        {
+            case "Pawn": obj.GetComponent<MeshFilter>().mesh = pawnMesh; break;
+            case "Knight": obj.GetComponent<MeshFilter>().mesh = knightMesh; break;
+            case "Unicorn": obj.GetComponent<MeshFilter>().mesh = unicornMesh; break;
+            case "Bishop": obj.GetComponent<MeshFilter>().mesh = bishopMesh; break;
+            case "Rook": obj.GetComponent<MeshFilter>().mesh = rookMesh; break;
+            case "King": obj.GetComponent<MeshFilter>().mesh = kingMesh; break;
+            case "Queen": obj.GetComponent<MeshFilter>().mesh = queenMesh; break;
+            default: break;
+        }
+
+        Destroy(obj.GetComponent<Collider>());
+        obj.AddComponent<MeshCollider>().convex = true;
     }
 
     internal void Expand(bool expanded)
@@ -108,7 +125,7 @@ public class Board : MonoBehaviour
                 camDistance = boardSize * 3.1f;
             }
 
-            levels[i].localPosition = new Vector3(0, Mathf.Lerp(levels[i].localPosition.y, levelY*1.25f, Time.deltaTime * 10f), 0);
+            levels[i].localPosition = new Vector3(0, Mathf.Lerp(levels[i].localPosition.y, levelY*1.42f, Time.deltaTime * 10f), 0);
         }
     }
 
@@ -239,7 +256,7 @@ public class Board : MonoBehaviour
 
         // Move instance
         selectedPiece.instance.transform.SetParent(levels[y]);
-        selectedPiece.instance.transform.localPosition = new Vector3(x + 0.5f, 1f, z + 0.5f);
+        selectedPiece.instance.transform.localPosition = new Vector3(x + 0.5f, 0.5f, z + 0.5f);
 
         // Finish
         Logic.EndTurn(this);  
@@ -372,6 +389,17 @@ public class Board : MonoBehaviour
                     slot.transform.position = new Vector3(x + 0.5f, y + 0.5f, z + 0.5f);
                     slot.name = x + ", " + y + ", " + z;
                     slot.transform.SetParent(level.transform);
+
+
+                    GameObject slotUnder = GameObject.CreatePrimitive(PrimitiveType.Plane);
+                    slotUnder.tag = "Board";
+                    slotUnder.GetComponent<MeshRenderer>().material = boardWire;
+                    slotUnder.transform.localScale = new Vector3(0.1f, 1f, 0.1f);
+                    slotUnder.transform.position = new Vector3(x + 0.5f, y + 0.5f, z + 0.5f);
+                    slotUnder.transform.Rotate(transform.forward*180f);
+                    slotUnder.name = x + ", " + y + ", " + z;
+                    slotUnder.transform.SetParent(level.transform);
+                    Destroy(slotUnder.GetComponent<Collider>());
                 }
             }
         }

@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 2
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -628,9 +628,24 @@ MonoBehaviour:
   boardWhite: {fileID: 2100000, guid: 46abd7b92adb0444496666cbd13cbfe0, type: 2}
   pieceBlack: {fileID: 2100000, guid: f62cf673b3979a745a7dbc1c924eb437, type: 2}
   pieceWhite: {fileID: 2100000, guid: 42a689671bec89c4fafe2baa12f4c1de, type: 2}
+  boardWire: {fileID: 2100000, guid: 316aa57ce95207049961e42023a6c659, type: 2}
   coordinateMarkerPrefab: {fileID: 8320870843324216794, guid: f3bad5b25c1df8749bc06be43c399841,
     type: 3}
   selection: {fileID: 296250529}
+  pawnMesh: {fileID: 4864056309639282896, guid: 108df27e86f6f384ebc9043ff1ad785d,
+    type: 3}
+  rookMesh: {fileID: 2540817853737639666, guid: 108df27e86f6f384ebc9043ff1ad785d,
+    type: 3}
+  knightMesh: {fileID: -7487567997603328355, guid: 108df27e86f6f384ebc9043ff1ad785d,
+    type: 3}
+  bishopMesh: {fileID: -5750084716789328873, guid: 108df27e86f6f384ebc9043ff1ad785d,
+    type: 3}
+  unicornMesh: {fileID: -6976191071164304731, guid: 108df27e86f6f384ebc9043ff1ad785d,
+    type: 3}
+  kingMesh: {fileID: 4068373912626513877, guid: 108df27e86f6f384ebc9043ff1ad785d,
+    type: 3}
+  queenMesh: {fileID: 4629239133506770964, guid: 108df27e86f6f384ebc9043ff1ad785d,
+    type: 3}
 --- !u!4 &1772774969
 Transform:
   m_ObjectHideFlags: 0
